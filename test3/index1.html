@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test 3 - AJAX without XMLHTTPRequest - form to iframe</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <style>
+            html {
+                padding: 20px;
+            }
+            body {
+                padding: 0px;
+            }
+            html, body {
+                margin: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <form target="iframe" action="json_sample.json" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="url">Url</label>
+                <input type="text" class="form-control" disabled="" id="url" placeholder="Url" value="json_sample.json">
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="method" id="method1" value="get" checked> Get
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="method" id="method2" value="post"> Post
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="file">File input</label>
+                <input type="file" id="file">
+            </div>
+            <div class="form-group">
+                <label for="request-data">Request Data</label>
+                <textarea class="form-control" id="request-data" rows="6"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
+        <div class="hidden">
+            <iframe src="" id="iframe" name="iframe"></iframe>
+        </div>
+
+        <script type="text/javascript">
+            $("input[name=method]").change(function () {
+                $("form").attr("method", $(this).val());
+            });
+            $("#iframe").bind("load", function () {
+                iframe = $(this)[0];
+                var doc = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document;
+                var innerHTML = doc.body.innerHTML;
+                if (innerHTML.slice(0, 5).toLowerCase() == "<pre>" && innerHTML.slice(-6).toLowerCase() == "</pre>") {
+                    innerHTML = doc.body.firstChild.firstChild.nodeValue;
+                }
+                //var json = JSON.parse(innerHTML);
+                //var json = eval("(" + innerHTML + ")");
+                $("#request-data").val(innerHTML);
+            });
+        </script>
+    </body>
+</html>
