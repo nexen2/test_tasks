@@ -31,7 +31,9 @@ class CssParser extends Parser
         $this->basePath = dirname($url);
         
         $urls = $this->scanForUrls('/url\s*\(\s*["\']?(.+?)["\']?\s*\)/i');
-        $this->size += $this->getSizeMulti($urls);
+        $imports = $this->scanForUrls('/@import\s*["\'](.+?)["\']/');
+        
+        $this->size += $this->getSizeMulti(array_merge($urls, $imports));
         
         return $this->size;
     }
